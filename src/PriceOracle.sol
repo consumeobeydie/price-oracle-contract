@@ -9,17 +9,17 @@ contract PriceOracle {
     address public owner;
 
     struct PriceFeed {
-        string  symbol;
+        string symbol;
         uint256 price;
         uint256 decimals;
         uint256 updatedAt;
         uint256 roundId;
-        bool    active;
+        bool active;
     }
 
-    mapping(bytes32 => PriceFeed)  public feeds;
-    mapping(address => bool)       public authorizedFeeders;
-    bytes32[]                      private feedKeys;
+    mapping(bytes32 => PriceFeed) public feeds;
+    mapping(address => bool) public authorizedFeeders;
+    bytes32[] private feedKeys;
 
     uint256 public constant MAX_STALENESS = 1 hours;
 
@@ -65,7 +65,7 @@ contract PriceOracle {
         bytes32 key = keccak256(abi.encodePacked(symbol));
         PriceFeed storage feed = feeds[key];
         if (!feed.active) revert FeedNotFound();
-        feed.price     = price;
+        feed.price = price;
         feed.updatedAt = block.timestamp;
         feed.roundId++;
         emit PriceUpdated(key, symbol, price, feed.roundId);
@@ -81,7 +81,11 @@ contract PriceOracle {
     }
 
     /// @notice Get latest price without staleness check.
-    function getPriceUnsafe(string memory symbol) external view returns (uint256 price, uint256 updatedAt, uint256 roundId) {
+    function getPriceUnsafe(string memory symbol)
+        external
+        view
+        returns (uint256 price, uint256 updatedAt, uint256 roundId)
+    {
         bytes32 key = keccak256(abi.encodePacked(symbol));
         PriceFeed memory feed = feeds[key];
         if (!feed.active) revert FeedNotFound();

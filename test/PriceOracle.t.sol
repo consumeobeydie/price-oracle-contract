@@ -8,7 +8,7 @@ contract PriceOracleTest is Test {
     PriceOracle public oracle;
     address public owner = address(this);
     address public feeder = address(0xFEED);
-    address public alice  = address(0xA11CE);
+    address public alice = address(0xA11CE);
 
     function setUp() public {
         oracle = new PriceOracle();
@@ -18,7 +18,7 @@ contract PriceOracleTest is Test {
 
     function testCreateFeed() public view {
         bytes32 key = keccak256(abi.encodePacked("BTC"));
-        (string memory symbol,,uint256 decimals,,, bool active) = oracle.feeds(key);
+        (string memory symbol,, uint256 decimals,,, bool active) = oracle.feeds(key);
         assertEq(symbol, "BTC");
         assertEq(decimals, 8);
         assertEq(active, true);
@@ -94,7 +94,7 @@ contract PriceOracleTest is Test {
         oracle.updatePrice("BTC", 65000_00000000);
         oracle.updatePrice("BTC", 66000_00000000);
         oracle.updatePrice("BTC", 67000_00000000);
-        (, , uint256 roundId) = oracle.getPriceUnsafe("BTC");
+        (,, uint256 roundId) = oracle.getPriceUnsafe("BTC");
         assertEq(roundId, 3);
     }
 
